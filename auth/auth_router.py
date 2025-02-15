@@ -3,9 +3,7 @@ from sqlalchemy.orm import Session
 from auth import auth_schemas
 from auth.auth_bearer import JWTBearer
 from auth.auth_service import AuthService
-from auth.auth_utils import create_access_token, create_refresh_token, verify_password
 from database import get_db
-from models import User
 import models
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
