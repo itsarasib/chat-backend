@@ -12,6 +12,7 @@ class Message(BaseModel):
     content: str
     
 class CompletionRequest(BaseModel):
+    conversationId: str
     model: str
     maxTokens: int
     messages: List[Message]

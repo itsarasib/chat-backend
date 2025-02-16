@@ -23,7 +23,6 @@ class User(Base):
 
     conversations = relationship("Conversation", back_populates="user")
 
-
 class TokenTable(Base):
     __tablename__ = "tokens"
     user_id = Column(Integer)
@@ -32,11 +31,14 @@ class TokenTable(Base):
     status = Column(Boolean)
     created_date = Column(DateTime, server_default=func.now())
 
+class Conversation(Base):
+    __tablename__ = 'conversation'
 
-class Config(Base):
-    __tablename__ = 'config'
-
-    id = Column(Integer, primary_key=True, autoincrement=True)
+    id = Column(String, primary_key=True)
+    userId = Column(Integer, ForeignKey('users.id'), nullable=False)
+    title = Column(String, nullable=False)
+    createdAt = Column(TIMESTAMP, server_default=func.now())
+    updatedAt = Column(TIMESTAMP, server_default=func.now(), onupdate=func.now())
     systemPrompt = Column(String, nullable=False)
     model = Column(String, nullable=False)
     maxTokens = Column(Integer, nullable=False)
@@ -46,29 +48,14 @@ class Config(Base):
     repetitionPenalty = Column(Float, nullable=False)
     minP = Column(Float, nullable=False)
 
-    conversations = relationship("Conversation", back_populates="config")
-
-
-class Conversation(Base):
-    __tablename__ = 'conversation'
-
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    userId = Column(Integer, ForeignKey('users.id'), nullable=False)
-    title = Column(String, nullable=False)
-    createdAt = Column(TIMESTAMP, server_default=func.now())
-    updatedAt = Column(TIMESTAMP, server_default=func.now(), onupdate=func.now())
-    configId = Column(Integer, ForeignKey('config.id'), nullable=False)
-
     user = relationship("User", back_populates="conversations")
-    config = relationship("Config", back_populates="conversations")
     messages = relationship("Message", back_populates="conversation")
-
 
 class Message(Base):
     __tablename__ = 'message'
 
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    conversationId = Column(Integer, ForeignKey('conversation.id'), nullable=False)
+    id = Column(String, primary_key=True)
+    conversationId = Column(String, ForeignKey('conversation.id'), nullable=False)
     content = Column(String, nullable=False)
     role = Column(Enum(MessageRole), nullable=False)
     feedback = Column(Enum(MessageFeedback), default=MessageFeedback.non, nullable=False)
