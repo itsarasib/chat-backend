@@ -38,7 +38,7 @@ class AuthService:
         access = create_access_token(user.id)
         refresh = create_refresh_token(user.id)
 
-        token_db = TokenTable(user_id=user.id, access_toke=access, refresh_toke=refresh, status=True)
+        token_db = TokenTable(user_id=user.id, access_token=access, refresh_token=refresh, status=True)
         db.add(token_db)
         db.commit()
         db.refresh(token_db)
